@@ -22,7 +22,7 @@ class RetrieveThenReadVisionApproach(Approach):
     """
 
     system_chat_template_gpt4v = (
-        "You are an intelligent assistant helping analyze the Annual Financial Report of  Ltd., The documents contain text, graphs, tables and images. "
+        "You are an intelligent assistant helping analyze the Annual Financial Report of Contoso Ltd., The documents contain text, graphs, tables and images. "
         + "Each image source has the file name in the top left corner of the image with coordinates (10,10) pixels and is in the format SourceFileName:<file_name> "
         + "Each text source starts in a new line and has the file name followed by colon and the actual information "
         + "Always include the source name from the image or text for each fact you use in the response in the format: [filename] "
@@ -86,8 +86,8 @@ class RetrieveThenReadVisionApproach(Approach):
 
         use_semantic_captions = True if overrides.get("semantic_captions") and has_text else False
         top = overrides.get("top", 3)
-        minimum_search_score = overrides.get("minimum_search_score", 0.025)
-        minimum_reranker_score = overrides.get("minimum_reranker_score", 2.5)
+        minimum_search_score = overrides.get("minimum_search_score", 0.0)
+        minimum_reranker_score = overrides.get("minimum_reranker_score", 0.0)
         filter = self.build_filter(overrides, auth_claims)
         use_semantic_ranker = overrides.get("semantic_ranker") and has_text
 
@@ -145,7 +145,7 @@ class RetrieveThenReadVisionApproach(Approach):
             await self.openai_client.chat.completions.create(
                 model=self.gpt4v_deployment if self.gpt4v_deployment else self.gpt4v_model,
                 messages=updated_messages,
-                temperature=overrides.get("temperature", 0.0),
+                temperature=overrides.get("temperature", 0.3),
                 max_tokens=1024,
                 n=1,
             )

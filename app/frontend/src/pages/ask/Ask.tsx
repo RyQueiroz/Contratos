@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import { Checkbox, Panel, DefaultButton, Spinner, Slider, TextField, SpinButton, IDropdownOption, Dropdown } from "@fluentui/react";
 
@@ -22,9 +23,9 @@ export function Component(): JSX.Element {
     const [promptTemplate, setPromptTemplate] = useState<string>("");
     const [promptTemplatePrefix, setPromptTemplatePrefix] = useState<string>("");
     const [promptTemplateSuffix, setPromptTemplateSuffix] = useState<string>("");
-    const [temperature, setTemperature] = useState<number>(0.0);
-    const [minimumRerankerScore, setMinimumRerankerScore] = useState<number>(1.5);
-    const [minimumSearchScore, setMinimumSearchScore] = useState<number>(0.01);
+    const [temperature, setTemperature] = useState<number>(0.3);
+    const [minimumRerankerScore, setMinimumRerankerScore] = useState<number>(0);
+    const [minimumSearchScore, setMinimumSearchScore] = useState<number>(0);
     const [retrievalMode, setRetrievalMode] = useState<RetrievalMode>(RetrievalMode.Hybrid);
     const [retrieveCount, setRetrieveCount] = useState<number>(3);
     const [useSemanticRanker, setUseSemanticRanker] = useState<boolean>(true);
@@ -203,10 +204,10 @@ export function Component(): JSX.Element {
                     {showUserUpload && <UploadFile className={styles.commandButton} disabled={!isLoggedIn(client)} />}
                     <SettingsButton className={styles.commandButton} onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} />
                 </div>
-                <h1 className={styles.askTitle}>Faça uma pergunta sobre os seus dados</h1>
+                <h1 className={styles.askTitle}>Ask your data</h1>
                 <div className={styles.askQuestionInput}>
                     <QuestionInput
-                        placeholder="Exemplo: Qual a data da ultima Jurisprudência?"
+                        placeholder="Example: Does my plan cover annual eye exams?"
                         disabled={isLoading}
                         initQuestion={question}
                         onSend={question => makeApiRequest(question)}
@@ -214,7 +215,7 @@ export function Component(): JSX.Element {
                 </div>
             </div>
             <div className={styles.askBottomSection}>
-                {isLoading && <Spinner label="Gerando resposta" />}
+                {isLoading && <Spinner label="Generating answer" />}
                 {!lastQuestionRef.current && <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} />}
                 {!isLoading && answer && !error && (
                     <div className={styles.askAnswerContainer}>
@@ -245,18 +246,18 @@ export function Component(): JSX.Element {
             </div>
 
             <Panel
-                headerText="Configurar geração de resposta"
+                headerText="Configure answer generation"
                 isOpen={isConfigPanelOpen}
                 isBlocking={false}
                 onDismiss={() => setIsConfigPanelOpen(false)}
-                closeButtonAriaLabel="Fechar"
-                onRenderFooterContent={() => <DefaultButton onClick={() => setIsConfigPanelOpen(false)}>Fechar</DefaultButton>}
+                closeButtonAriaLabel="Close"
+                onRenderFooterContent={() => <DefaultButton onClick={() => setIsConfigPanelOpen(false)}>Close</DefaultButton>}
                 isFooterAtBottom={true}
             >
                 <TextField
                     className={styles.askSettingsSeparator}
                     defaultValue={promptTemplate}
-                    label="Sobrescrever template do prompt"
+                    label="Override prompt template"
                     multiline
                     autoAdjustHeight
                     onChange={onPromptTemplateChange}
@@ -264,7 +265,7 @@ export function Component(): JSX.Element {
 
                 <Slider
                     className={styles.chatSettingsSeparator}
-                    label="Temperatura"
+                    label="Temperature"
                     min={0}
                     max={1}
                     step={0.1}
@@ -276,7 +277,7 @@ export function Component(): JSX.Element {
 
                 <SpinButton
                     className={styles.askSettingsSeparator}
-                    label="Score minimo de pesquisa"
+                    label="Minimum search score"
                     min={0}
                     step={0.01}
                     defaultValue={minimumSearchScore.toString()}
@@ -285,7 +286,7 @@ export function Component(): JSX.Element {
 
                 <SpinButton
                     className={styles.askSettingsSeparator}
-                    label="Score minimo do reclassificador"
+                    label="Minimum reranker score"
                     min={1}
                     max={4}
                     step={0.1}
@@ -295,19 +296,19 @@ export function Component(): JSX.Element {
 
                 <SpinButton
                     className={styles.askSettingsSeparator}
-                    label="Recuperar quantos resultados de pesquisa:"
+                    label="Retrieve this many search results:"
                     min={1}
                     max={50}
                     defaultValue={retrieveCount.toString()}
                     onChange={onRetrieveCountChange}
                 />
-                <TextField className={styles.askSettingsSeparator} label="Excluir categoria" onChange={onExcludeCategoryChanged} />
+                <TextField className={styles.askSettingsSeparator} label="Exclude category" onChange={onExcludeCategoryChanged} />
 
                 {showSemanticRankerOption && (
                     <Checkbox
                         className={styles.askSettingsSeparator}
                         checked={useSemanticRanker}
-                        label="Usar o classificador semântico"
+                        label="Use semantic ranker for retrieval"
                         onChange={onUseSemanticRankerChange}
                     />
                 )}
@@ -315,7 +316,7 @@ export function Component(): JSX.Element {
                 <Checkbox
                     className={styles.askSettingsSeparator}
                     checked={useSemanticCaptions}
-                    label="Usar resumos contextuais de consulta em vez de documentos inteiros"
+                    label="Use query-contextual summaries instead of whole documents"
                     onChange={onUseSemanticCaptionsChange}
                     disabled={!useSemanticRanker}
                 />

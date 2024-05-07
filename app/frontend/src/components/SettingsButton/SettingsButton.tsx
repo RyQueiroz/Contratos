@@ -12,7 +12,7 @@ export const SettingsButton = ({ className, onClick }: Props) => {
     return (
         <div className={`${styles.container} ${className ?? ""}`}>
             <Button icon={<Settings24Regular />} onClick={onClick}>
-                {"Configurações"}
+                {"Developer settings"}
             </Button>
         </div>
     );

@@ -63,10 +63,16 @@ class ChatReadRetrieveReadVisionApproach(ChatApproach):
     @property
     def system_message_chat_conversation(self):
         return """
-        Você é um assistente inteligente ajudando os funcionários da Atra com perguntas sobre um conjunto de contratos legais públicos.
-        Responda APENAS com os fatos listados na lista de fontes abaixo. Se não houver informações suficientes abaixo, diga que não sabe. Não gere respostas que não usem as fontes abaixo. Se fazer uma pergunta de esclarecimento para o usuário ajudaria, faça a pergunta.
-        Para informações tabulares, retorne-as como uma tabela HTML. Não retorne em formato markdown. Se a pergunta não estiver em português, responda no idioma usado na pergunta.
-        Cada fonte tem um nome seguido por dois pontos e a informação real, sempre inclua o nome da fonte para cada fato que você usar na resposta. Use colchetes para referenciar a fonte, por exemplo [info1.txt]. Não combine fontes, liste cada fonte separadamente, por exemplo [info1.txt][info2.pdf].
+        You are an intelligent assistant helping analyze the Annual Financial Report of Contoso Ltd., The documents contain text, graphs, tables and images.
+        Each image source has the file name in the top left corner of the image with coordinates (10,10) pixels and is in the format SourceFileName:<file_name>
+        Each text source starts in a new line and has the file name followed by colon and the actual information
+        Always include the source name from the image or text for each fact you use in the response in the format: [filename]
+        Answer the following question using only the data provided in the sources below.
+        If asking a clarifying question to the user would help, ask the question.
+        Be brief in your answers.
+        For tabular information return it as an html table. Do not return markdown format.
+        The text and image source can be the same file name, don't use the image title when citing the image source, only use the file name as mentioned
+        If you cannot answer using the sources below, say you don't know. Return just the answer without any input texts.
         {follow_up_questions_prompt}
         {injected_prompt}
         """
@@ -83,8 +89,8 @@ class ChatReadRetrieveReadVisionApproach(ChatApproach):
         vector_fields = overrides.get("vector_fields", ["embedding"])
         use_semantic_captions = True if overrides.get("semantic_captions") and has_text else False
         top = overrides.get("top", 3)
-        minimum_search_score = overrides.get("minimum_search_score", 0.025)
-        minimum_reranker_score = overrides.get("minimum_reranker_score", 0.25)
+        minimum_search_score = overrides.get("minimum_search_score", 0.0)
+        minimum_reranker_score = overrides.get("minimum_reranker_score", 0.0)
         filter = self.build_filter(overrides, auth_claims)
         use_semantic_ranker = True if overrides.get("semantic_ranker") and has_text else False
 
@@ -223,7 +229,7 @@ class ChatReadRetrieveReadVisionApproach(ChatApproach):
         chat_coroutine = self.openai_client.chat.completions.create(
             model=self.gpt4v_deployment if self.gpt4v_deployment else self.gpt4v_model,
             messages=messages,
-            temperature=overrides.get("temperature", 0.0),
+            temperature=overrides.get("temperature", 0.3),
             max_tokens=response_token_limit,
             n=1,
             stream=should_stream,

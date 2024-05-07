@@ -507,7 +507,7 @@ async def test_chat_with_history(client, snapshot):
         "/chat",
         json={
             "messages": [
-                {"content": "What does the first clause of the contract say?", "role": "user"},
+                {"content": "What happens in a performance review?", "role": "user"},
                 {
                     "content": "During a performance review, employees will receive feedback on their performance over the past year, including both successes and areas for improvement. The feedback will be provided by the employee's supervisor and is intended to help the employee develop and grow in their role [employee_handbook-3.pdf]. The review is a two-way dialogue between the employee and their manager, so employees are encouraged to be honest and open during the process [employee_handbook-3.pdf]. The employee will also have the opportunity to discuss their goals and objectives for the upcoming year [employee_handbook-3.pdf]. A written summary of the performance review will be provided to the employee, which will include a rating of their performance, feedback, and goals and objectives for the upcoming year [employee_handbook-3.pdf].",
                     "role": "assistant",
@@ -533,13 +533,13 @@ async def test_chat_with_long_history(client, snapshot, caplog):
         "/chat",
         json={
             "messages": [
-                {"role": "user", "content": "What is the payment method?"},  # 9 tokens
+                {"role": "user", "content": "Is there a dress code?"},  # 9 tokens
                 {
                     "role": "assistant",
-                    "content": "The payment will be made via deposit in bank account held by the supplier company. [contract02-2024.pdf]"
+                    "content": "Yes, there is a dress code at Contoso Electronics. Look sharp! [employee_handbook-1.pdf]"
                     * 150,
                 },  # 3900 tokens
-                {"role": "user", "content": "What is the subject of the contract?"},  # 10 tokens
+                {"role": "user", "content": "What does a product manager do?"},  # 10 tokens
             ],
             "context": {
                 "overrides": {"retrieval_mode": "text"},
@@ -549,7 +549,7 @@ async def test_chat_with_long_history(client, snapshot, caplog):
     assert response.status_code == 200
     result = await response.get_json()
     # Assert that it doesn't find the first message, since it wouldn't fit in the max tokens.
-    assert not thought_contains_text(result["choices"][0]["context"]["thoughts"][3], "What is the payment method?")
+    assert not thought_contains_text(result["choices"][0]["context"]["thoughts"][3], "Is there a dress code?")
     assert "Reached max tokens" in caplog.text
     snapshot.assert_match(json.dumps(result, indent=4), "result.json")
 

@@ -11,33 +11,31 @@ from core.messagebuilder import MessageBuilder
 
 class RetrieveThenReadApproach(Approach):
     """
-    Implementação simples de recuperação e leitura, usando as APIs de IA Search e OpenAI diretamente. Primeiro, ele recupera
-    os principais documentos da pesquisa, depois constrói um prompt com eles e, em seguida, usa o OpenAI para gerar uma conclusão
-    (resposta) com esse prompt.
+    Simple retrieve-then-read implementation, using the AI Search and OpenAI APIs directly. It first retrieves
+    top documents from search, then constructs a prompt with them, and then uses OpenAI to generate an completion
+    (answer) with that prompt.
     """
 
     system_chat_template = (
-        "Você é um assistente inteligente ajudando os funcionários da Atra com perguntas sobre um conjunto de contratos legais públicos."
-        + "Use 'você' para se referir ao indivíduo que faz as perguntas, mesmo que elas sejam feitas com 'eu'."
-        + "Responda à seguinte pergunta usando apenas os dados fornecidos nas fontes abaixo."
-        + "Para informações tabulares, retorne-as como uma tabela HTML. Não retorne no formato markdown."
-        + "Cada fonte tem um nome seguido por dois pontos e a informação real, sempre inclua o nome da fonte para cada fato que você usar na resposta."
-        + "Se você não puder responder usando as fontes abaixo, diga que não sabe ou que não pode responder essa questão no momento."
-        + "Se a pergunta do usuário não esitver em Português, traduza-a para o Português. Forneça as respostas apenas em Português."
+        "You are an intelligent assistant helping Contoso Inc employees with their healthcare plan questions and employee handbook questions. "
+        + "Use 'you' to refer to the individual asking the questions even if they ask with 'I'. "
+        + "Answer the following question using only the data provided in the sources below. "
+        + "For tabular information return it as an html table. Do not return markdown format. "
+        + "Each source has a name followed by colon and the actual information, always include the source name for each fact you use in the response. "
+        + "If you cannot answer using the sources below, say you don't know. Use below example to answer"
     )
 
     # shots/sample conversation
     question = """
-        'Qual é o valor médio desses contratos?'
+'What is the deductible for the employee plan for a visit to Overlake in Bellevue?'
 
-        Fontes:
-        contrato1.pdf: Este contrato, válido de 30/11/2023 a 30/11/2024, é para serviços relacionados ao recebimento, armazenamento e disposição final de pneus inutilizáveis em Sapezal-MT. O valor do contrato é de R$ 154.800,00.
-        contrato2.pdf: Este contrato, com base na Lei Federal nº 14133, de 1º de abril, é para aquisição de itens a um custo total de R$ 469.899,99. Os pagamentos deste contrato serão feitos a partir de alocações orçamentárias específicas.
-        contrato3.pdf: Este contrato, que não permite subcontratação, é para a prestação de serviços a um custo total de R$ 663.500,00. O custo inclui todas as despesas diretas e indiretas relacionadas à execução do contrato.
-        contrato4.pdf: Este contrato, resultante da Dispensa de Licitação nº 27/2024, é para serviços especializados de elaboração de laudos, pareceres técnicos em perícias psiquiátricas e grafotécnicas. O valor total do contrato é de R$ 1.200,00. O pagamento será feito em até 30 dias após a emissão da fatura.
-        """
-
-    answer = "O valor médio dos contratos é de R$ 322.349,99. Isso é calculado adicionando os valores totais (R$ 154.800,00, R$ 469.899,99, R$ 663.500,00, R$ 1.200,00) e dividindo pelo número de contratos (4). Por favor, note que este é um cálculo simplificado e pode não levar em consideração outros fatores que poderiam afetar o valor médio dos contratos. É sempre uma boa ideia consultar um consultor financeiro ou contador para cálculos mais precisos."
+Sources:
+info1.txt: deductibles depend on whether you are in-network or out-of-network. In-network deductibles are $500 for employee and $1000 for family. Out-of-network deductibles are $1000 for employee and $2000 for family.
+info2.pdf: Overlake is in-network for the employee plan.
+info3.pdf: Overlake is the name of the area that includes a park and ride near Bellevue.
+info4.pdf: In-network institutions include Overlake, Swedish and others in the region
+"""
+    answer = "In-network deductibles are $500 for employee and $1000 for family [info1.txt] and Overlake is in-network for the employee plan [info2.pdf][info4.pdf]."
 
     def __init__(
         self,
@@ -85,8 +83,8 @@ class RetrieveThenReadApproach(Approach):
 
         use_semantic_captions = True if overrides.get("semantic_captions") and has_text else False
         top = overrides.get("top", 3)
-        minimum_search_score = overrides.get("minimum_search_score", 0.01)
-        minimum_reranker_score = overrides.get("minimum_reranker_score", 1.5)
+        minimum_search_score = overrides.get("minimum_search_score", 0.0)
+        minimum_reranker_score = overrides.get("minimum_reranker_score", 0.0)
         filter = self.build_filter(overrides, auth_claims)
         # If retrieval mode includes vectors, compute an embedding for the query
         vectors: list[VectorQuery] = []
@@ -128,7 +126,7 @@ class RetrieveThenReadApproach(Approach):
                 # Azure OpenAI takes the deployment name as the model name
                 model=self.chatgpt_deployment if self.chatgpt_deployment else self.chatgpt_model,
                 messages=updated_messages,
-                temperature=overrides.get("temperature", 0.0),
+                temperature=overrides.get("temperature", 0.3),
                 max_tokens=1024,
                 n=1,
             )

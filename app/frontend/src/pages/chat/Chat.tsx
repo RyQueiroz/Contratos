@@ -33,9 +33,9 @@ import { GPT4VSettings } from "../../components/GPT4VSettings";
 const Chat = () => {
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
     const [promptTemplate, setPromptTemplate] = useState<string>("");
-    const [temperature, setTemperature] = useState<number>(0.0);
-    const [minimumRerankerScore, setMinimumRerankerScore] = useState<number>(1.5);
-    const [minimumSearchScore, setMinimumSearchScore] = useState<number>(0.01);
+    const [temperature, setTemperature] = useState<number>(0.3);
+    const [minimumRerankerScore, setMinimumRerankerScore] = useState<number>(0);
+    const [minimumSearchScore, setMinimumSearchScore] = useState<number>(0);
     const [retrieveCount, setRetrieveCount] = useState<number>(3);
     const [retrievalMode, setRetrievalMode] = useState<RetrievalMode>(RetrievalMode.Hybrid);
     const [useSemanticRanker, setUseSemanticRanker] = useState<boolean>(true);
@@ -293,9 +293,9 @@ const Chat = () => {
                 <div className={styles.chatContainer}>
                     {!lastQuestionRef.current ? (
                         <div className={styles.chatEmptyState}>
-                            <SparkleFilled fontSize={"120px"} primaryFill={"rgba(94, 165, 251, 1)"} aria-hidden="true" aria-label="Chat logo" />
-                            <h1 className={styles.chatEmptyStateTitle}>Converse com seu Histórico Jurídico</h1>
-                            <h2 className={styles.chatEmptyStateSubtitle}>Pergunte qualquer coisa ou tente um exemplo</h2>
+                            <SparkleFilled fontSize={"120px"} primaryFill={"rgba(115, 118, 225, 1)"} aria-hidden="true" aria-label="Chat logo" />
+                            <h1 className={styles.chatEmptyStateTitle}>Chat with your data</h1>
+                            <h2 className={styles.chatEmptyStateSubtitle}>Ask anything or try an example</h2>
                             <ExampleList onExampleClicked={onExampleClicked} useGPT4V={useGPT4V} />
                         </div>
                     ) : (
@@ -361,7 +361,7 @@ const Chat = () => {
                     <div className={styles.chatInput}>
                         <QuestionInput
                             clearOnSend
-                            placeholder="Exemplo: Mostre uma Jurisprudência que aborde multas em locações"
+                            placeholder="Type a new question (e.g. does my plan cover annual eye exams?)"
                             disabled={isLoading}
                             onSend={question => makeApiRequest(question)}
                         />
@@ -380,18 +380,18 @@ const Chat = () => {
                 )}
 
                 <Panel
-                    headerText="Configurar geração de resposta"
+                    headerText="Configure answer generation"
                     isOpen={isConfigPanelOpen}
                     isBlocking={false}
                     onDismiss={() => setIsConfigPanelOpen(false)}
-                    closeButtonAriaLabel="Fechar"
-                    onRenderFooterContent={() => <DefaultButton onClick={() => setIsConfigPanelOpen(false)}>Fechar</DefaultButton>}
+                    closeButtonAriaLabel="Close"
+                    onRenderFooterContent={() => <DefaultButton onClick={() => setIsConfigPanelOpen(false)}>Close</DefaultButton>}
                     isFooterAtBottom={true}
                 >
                     <TextField
                         className={styles.chatSettingsSeparator}
                         defaultValue={promptTemplate}
-                        label="Sobrescrever template do prompt"
+                        label="Override prompt template"
                         multiline
                         autoAdjustHeight
                         onChange={onPromptTemplateChange}
@@ -399,7 +399,7 @@ const Chat = () => {
 
                     <Slider
                         className={styles.chatSettingsSeparator}
-                        label="Temperatura"
+                        label="Temperature"
                         min={0}
                         max={1}
                         step={0.1}
@@ -411,7 +411,7 @@ const Chat = () => {
 
                     <SpinButton
                         className={styles.chatSettingsSeparator}
-                        label="Score minimo de pesquisa"
+                        label="Minimum search score"
                         min={0}
                         step={0.01}
                         defaultValue={minimumSearchScore.toString()}
@@ -420,7 +420,7 @@ const Chat = () => {
 
                     <SpinButton
                         className={styles.chatSettingsSeparator}
-                        label="Score minimo do reclassificador"
+                        label="Minimum reranker score"
                         min={1}
                         max={4}
                         step={0.1}
@@ -430,33 +430,33 @@ const Chat = () => {
 
                     <SpinButton
                         className={styles.chatSettingsSeparator}
-                        label="Recuperar quantos resultados de pesquisa:"
+                        label="Retrieve this many search results:"
                         min={1}
                         max={50}
                         defaultValue={retrieveCount.toString()}
                         onChange={onRetrieveCountChange}
                     />
-                    <TextField className={styles.chatSettingsSeparator} label="Excluir categoria" onChange={onExcludeCategoryChanged} />
+                    <TextField className={styles.chatSettingsSeparator} label="Exclude category" onChange={onExcludeCategoryChanged} />
 
                     {showSemanticRankerOption && (
                         <Checkbox
                             className={styles.chatSettingsSeparator}
                             checked={useSemanticRanker}
-                            label="Usar o classificador semântico"
+                            label="Use semantic ranker for retrieval"
                             onChange={onUseSemanticRankerChange}
                         />
                     )}
                     <Checkbox
                         className={styles.chatSettingsSeparator}
                         checked={useSemanticCaptions}
-                        label="Usar resumos contextuais de consulta em vez de documentos inteiros"
+                        label="Use query-contextual summaries instead of whole documents"
                         onChange={onUseSemanticCaptionsChange}
                         disabled={!useSemanticRanker}
                     />
                     <Checkbox
                         className={styles.chatSettingsSeparator}
                         checked={useSuggestFollowupQuestions}
-                        label="Sugerir perguntas de acompanhamento"
+                        label="Suggest follow-up questions"
                         onChange={onUseSuggestFollowupQuestionsChange}
                     />
 
@@ -501,7 +501,7 @@ const Chat = () => {
                     <Checkbox
                         className={styles.chatSettingsSeparator}
                         checked={shouldStream}
-                        label="Transmitir respostas de conclusão do chat"
+                        label="Stream chat completion responses"
                         onChange={onShouldStreamChange}
                     />
                     {useLogin && <TokenClaimsDisplay />}
