@@ -66,7 +66,7 @@ export const AnalysisPanel = ({ answer, activeTab, activeCitation, citationHeigh
             case "md":
                 return <MarkdownViewer src={activeCitation} />;
             default:
-                return <iframe title="Citation" src={citation} width="100%" height={citationHeight} />;
+                return <iframe title="Citação" src={citation} width="100%" height={citationHeight} />;
         }
     };
 
@@ -78,21 +78,21 @@ export const AnalysisPanel = ({ answer, activeTab, activeCitation, citationHeigh
         >
             <PivotItem
                 itemKey={AnalysisPanelTabs.ThoughtProcessTab}
-                headerText="Thought process"
+                headerText="Linha de Pensamento"
                 headerButtonProps={isDisabledThoughtProcessTab ? pivotItemDisabledStyle : undefined}
             >
                 <ThoughtProcess thoughts={answer.choices[0].context.thoughts || []} />
             </PivotItem>
             <PivotItem
                 itemKey={AnalysisPanelTabs.SupportingContentTab}
-                headerText="Supporting content"
+                headerText="Conteúdo de Apoio"
                 headerButtonProps={isDisabledSupportingContentTab ? pivotItemDisabledStyle : undefined}
             >
                 <SupportingContent supportingContent={answer.choices[0].context.data_points} />
             </PivotItem>
             <PivotItem
                 itemKey={AnalysisPanelTabs.CitationTab}
-                headerText="Citation"
+                headerText="Citação"
                 headerButtonProps={isDisabledCitationTab ? pivotItemDisabledStyle : undefined}
             >
                 {renderFileViewer()}

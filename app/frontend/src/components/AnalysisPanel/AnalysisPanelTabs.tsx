@@ -1,5 +1,5 @@
 export enum AnalysisPanelTabs {
-    ThoughtProcessTab = "thoughtProcess",
-    SupportingContentTab = "supportingContent",
-    CitationTab = "citation"
+    ThoughtProcessTab = "Linha de Pensamento",
+    SupportingContentTab = "Conteúdo de Apoio",
+    CitationTab = "Citação"
 }
