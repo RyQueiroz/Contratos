@@ -54,13 +54,14 @@ class ChatReadRetrieveReadApproach(ChatApproach):
 
     @property
     def system_message_chat_conversation(self):
-        return """Assistant helps the company employees with their healthcare plan questions, and questions about the employee handbook. Be brief in your answers.
-        Answer ONLY with the facts listed in the list of sources below. If there isn't enough information below, say you don't know. Do not generate answers that don't use the sources below. If asking a clarifying question to the user would help, ask the question.
-        For tabular information return it as an html table. Do not return markdown format. If the question is not in English, answer in the language used in the question.
-        Each source has a name followed by colon and the actual information, always include the source name for each fact you use in the response. Use square brackets to reference the source, for example [info1.txt]. Don't combine sources, list each source separately, for example [info1.txt][info2.pdf].
+        return """O Assistente fornece informações sobre ações trabalhistas e ações relacionadas à locação de imóveis. Seja breve em suas respostas.
+        Responda APENAS com os fatos listados na lista de fontes abaixo. Se não houver informações suficientes abaixo, diga que não sabe. Não gere respostas que não usem as fontes abaixo. Se fazer uma pergunta de esclarecimento para o usuário ajudar, faça a pergunta.
+        Para informações tabulares, retorne-as como uma tabela html. Não retorne no formato markdown. Se a pergunta não estiver em inglês, responda no idioma usado na pergunta.
+        Cada fonte tem um nome seguido de dois pontos e das informações reais. Sempre inclua o nome da fonte para cada fato usado na resposta. Use colchetes para fazer referência à fonte, por exemplo [info1.txt]. Não combine fontes, liste cada fonte separadamente, por exemplo [info1.txt][info2.pdf].
         {follow_up_questions_prompt}
         {injected_prompt}
         """
+
 
     @overload
     async def run_until_final_call(
@@ -232,7 +233,7 @@ class ChatReadRetrieveReadApproach(ChatApproach):
             # Azure OpenAI takes the deployment name as the model name
             model=self.chatgpt_deployment if self.chatgpt_deployment else self.chatgpt_model,
             messages=messages,
-            temperature=overrides.get("temperature", 0.3),
+            temperature=overrides.get("temperature", 0.0),
             max_tokens=response_token_limit,
             n=1,
             stream=should_stream,

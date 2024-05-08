@@ -21,30 +21,33 @@ class ChatApproach(Approach, ABC):
     ASSISTANT = "assistant"
 
     query_prompt_few_shots = [
-        {"role": USER, "content": "How did crypto do last year?"},
-        {"role": ASSISTANT, "content": "Summarize Cryptocurrency Market Dynamics from last year"},
-        {"role": USER, "content": "What are my health plans?"},
-        {"role": ASSISTANT, "content": "Show available health plans"},
+        {"role": USER, "content": "Quais são os meus direitos como inquilino?"},
+        {"role": ASSISTANT, "content": "Resuma os principais direitos do inquilino."},
+        {"role": USER, "content": "Como posso rescindir meu contrato de trabalho?"},
+        {"role": ASSISTANT, "content": "Explique os passos para rescindir um contrato de trabalho."},
+
     ]
     NO_RESPONSE = "0"
 
-    follow_up_questions_prompt_content = """Generate 3 very brief follow-up questions that the user would likely ask next.
-    Enclose the follow-up questions in double angle brackets. Example:
-    <<Are there exclusions for prescriptions?>>
-    <<Which pharmacies can be ordered from?>>
-    <<What is the limit for over-the-counter medication?>>
-    Do no repeat questions that have already been asked.
-    Make sure the last question ends with ">>".
+    follow_up_questions_prompt_content = """Gere 3 perguntas de acompanhamento breves que o usuário provavelmente faria a seguir.
+    Coloque as perguntas de acompanhamento entre colchetes duplos. Exemplo:
+    <<Qual é o prazo para notificar o locador sobre uma reparação?>>
+    <<Como faço para calcular a rescisão do contrato de trabalho?>>
+    <<Quais são os documentos necessários para iniciar uma ação trabalhista?>>
+    Não repita perguntas que já foram feitas.
+    Certifique-se de que a última pergunta termine com ">>".
     """
 
-    query_prompt_template = """Below is a history of the conversation so far, and a new question asked by the user that needs to be answered by searching in a knowledge base.
-    You have access to Azure AI Search index with 100's of documents.
-    Generate a search query based on the conversation and the new question.
-    Do not include cited source filenames and document names e.g info.txt or doc.pdf in the search query terms.
-    Do not include any text inside [] or <<>> in the search query terms.
-    Do not include any special characters like '+'.
-    If you cannot generate a search query, return just the number 0.
+
+    query_prompt_template = """Abaixo está um histórico da conversa até agora e uma nova pergunta feita pelo usuário que precisa ser respondida buscando em uma base de conhecimento.
+    Você tem acesso a um índice de pesquisa com centenas de documentos.
+    Gere uma consulta de pesquisa com base na conversa e na nova pergunta.
+    Não inclua nomes de arquivos citados e nomes de documentos, por exemplo info.txt ou doc.pdf, nos termos da consulta de pesquisa.
+    Não inclua nenhum texto dentro de [] ou <<>> nos termos da consulta de pesquisa.
+    Não inclua caracteres especiais como '+'.
+    Se não puder gerar uma consulta de pesquisa, retorne apenas o número 0.
     """
+
 
     @property
     @abstractmethod
