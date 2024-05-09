@@ -21,11 +21,30 @@ class ChatApproach(Approach, ABC):
     ASSISTANT = "assistant"
 
     query_prompt_few_shots = [
-        {"role": USER, "content": "Quais são os meus direitos como inquilino?"},
-        {"role": ASSISTANT, "content": "Resuma os principais direitos do inquilino."},
-        {"role": USER, "content": "Como posso rescindir meu contrato de trabalho?"},
-        {"role": ASSISTANT, "content": "Explique os passos para rescindir um contrato de trabalho."},
-
+        {"role": USER, "content": "Qual foi o motivo da apelação no caso de locação de aluguel?"},
+        {"role": ASSISTANT, "content": "Identifique o motivo da apelação no caso de locação de aluguel"},
+        {"role": USER, "content": "Quais foram os argumentos apresentados pelo apelante no caso trabalhista?"},
+        {"role": ASSISTANT, "content": "Liste os argumentos apresentados pelo apelante no caso trabalhista"},
+        {"role": USER, "content": "Qual foi a decisão do juiz em primeira instância no caso de locação de aluguel?"},
+        {"role": ASSISTANT, "content": "Descreva a decisão do juiz em primeira instância no caso de locação de aluguel"},
+        {"role": USER, "content": "Quais foram as provas apresentadas no caso trabalhista?"},
+        {"role": ASSISTANT, "content": "Identifique as provas apresentadas no caso trabalhista"},
+        {"role": USER, "content": "Qual foi o resultado da apelação no caso de locação de aluguel?"},
+        {"role": ASSISTANT, "content": "Informe o resultado da apelação no caso de locação de aluguel"}
+        {"role": USER, "content": "Qual é o procedimento para entrar com uma ação de despejo por falta de pagamento?"},
+        {"role": ASSISTANT, "content": "Explique o procedimento para entrar com uma ação de despejo por falta de pagamento"},
+        {"role": USER, "content": "Quais são os requisitos para caracterizar uma rescisão indireta do contrato de trabalho?"},
+        {"role": ASSISTANT, "content": "Descreva os requisitos para caracterizar uma rescisão indireta do contrato de trabalho"},
+        {"role": USER, "content": "Quais são os prazos para interpor recurso após uma sentença judicial?"},
+        {"role": ASSISTANT, "content": "Informe os prazos para interpor recurso após uma sentença judicial"},
+        {"role": USER, "content": "Como é calculada a indenização por danos morais em um processo trabalhista?"},
+        {"role": ASSISTANT, "content": "Explique como é calculada a indenização por danos morais em um processo trabalhista"},
+        {"role": USER, "content": "Quais são os documentos necessários para instruir uma ação de cobrança de aluguel em atraso?"},
+        {"role": ASSISTANT, "content": "Liste os documentos necessários para instruir uma ação de cobrança de aluguel em atraso"},
+        {"role": USER, "content": "Qual é a diferença entre um contrato de locação residencial e um contrato de locação comercial?"},
+        {"role": ASSISTANT, "content": "Explique a diferença entre um contrato de locação residencial e um contrato de locação comercial"},
+        {"role": USER, "content": "Quais são as formas de garantia de um contrato de locação?"},
+        {"role": ASSISTANT, "content": "Identifique as formas de garantia de um contrato de locação"}
     ]
     NO_RESPONSE = "0"
 
