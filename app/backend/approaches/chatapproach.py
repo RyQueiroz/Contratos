@@ -48,25 +48,23 @@ class ChatApproach(Approach, ABC):
     ]
     NO_RESPONSE = "0"
 
-    follow_up_questions_prompt_content = """Gere 3 perguntas de acompanhamento breves que o usuário provavelmente faria a seguir.
-    Coloque as perguntas de acompanhamento entre colchetes duplos. Exemplo:
-    <<Qual é o prazo para notificar o locador sobre uma reparação?>>
-    <<Como faço para calcular a rescisão do contrato de trabalho?>>
-    <<Quais são os documentos necessários para iniciar uma ação trabalhista?>>
-    Não repita perguntas que já foram feitas.
+    follow_up_questions_prompt_content = """<<Gere 3 perguntas de acompanhamento muito breves que o usuário provavelmente faria em seguida.
+    Inclua as perguntas de acompanhamento entre duplos sinais de ângulo. Exemplo:
+    <<Quais são os principais pontos de disputa na locação do imóvel?>>
+    <<Existem provas apresentadas que poderiam influenciar a decisão do tribunal no caso trabalhista?>>
+    <<Existem decisões judiciais anteriores semelhantes que podem influenciar o resultado deste caso?>>
     Certifique-se de que a última pergunta termine com ">>".
     """
 
-
-    query_prompt_template = """Abaixo está um histórico da conversa até agora e uma nova pergunta feita pelo usuário que precisa ser respondida buscando em uma base de conhecimento.
-    Você tem acesso a um índice de pesquisa com centenas de documentos.
+    query_prompt_template = """Abaixo está o histórico da conversa até agora e uma nova pergunta feita pelo usuário que precisa ser respondida pesquisando em uma base de conhecimento.
+    Você tem acesso ao índice de pesquisa do Azure AI com vários documentos. Os documentos são documentos legais públicos relacionados a uma variedade de serviços e acordos.
     Gere uma consulta de pesquisa com base na conversa e na nova pergunta.
-    Não inclua nomes de arquivos citados e nomes de documentos, por exemplo info.txt ou doc.pdf, nos termos da consulta de pesquisa.
+    Não inclua nomes de arquivos de origem citados e nomes de documentos, por exemplo, info.txt ou doc.pdf, nos termos da consulta de pesquisa.
     Não inclua nenhum texto dentro de [] ou <<>> nos termos da consulta de pesquisa.
-    Não inclua caracteres especiais como '+'.
-    Se não puder gerar uma consulta de pesquisa, retorne apenas o número 0.
+    Não inclua nenhum caractere especial como '+'.
+    Se a pergunta não estiver em português, traduza a pergunta para o português antes de gerar a consulta de pesquisa.
+    Se você não puder gerar uma consulta de pesquisa, retorne apenas o número 0.
     """
-
 
     @property
     @abstractmethod

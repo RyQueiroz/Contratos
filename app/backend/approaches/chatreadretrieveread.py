@@ -17,9 +17,9 @@ from core.modelhelper import get_token_limit
 
 class ChatReadRetrieveReadApproach(ChatApproach):
     """
-    A multi-step approach that first uses OpenAI to turn the user's question into a search query,
-    then uses Azure AI Search to retrieve relevant documents, and then sends the conversation history,
-    original user question, and search results to OpenAI to generate a response.
+    Uma abordagem de múltiplas etapas que primeiro utiliza o OpenAI para transformar a pergunta do usuário em uma consulta de pesquisa,
+    em seguida, utiliza o Azure AI Search para recuperar documentos relevantes, e então envia o histórico da conversa,
+    a pergunta original do usuário e os resultados da pesquisa para o OpenAI gerar uma resposta.
     """
 
     def __init__(
@@ -52,21 +52,16 @@ class ChatReadRetrieveReadApproach(ChatApproach):
         self.query_speller = query_speller
         self.chatgpt_token_limit = get_token_limit(chatgpt_model)
 
+
     @property
     def system_message_chat_conversation(self):
-        return """O Assistente fornece informações sobre processos trabalhistas e processos relacionadas à locação de imóveis. 
-        Seja breve em suas respostas.
-        Responda APENAS com os fatos listados na lista de fontes abaixo. 
-        Se não houver informações suficientes dentro do diretorio data, diga que não sabe. 
-        Não gere respostas que não usem as fontes dentro do diretorio data. Se fazer uma pergunta de esclarecimento para o usuário ajudar, faça a pergunta.
-        Para informações tabulares, retorne-as como uma tabela html. Não retorne no formato markdown. 
-        Sempre inclua o nome da fonte para cada fato usado na resposta. 
-        Use colchetes para fazer referência à fonte, por exemplo [info1.txt]. 
-        Não combine fontes, liste cada fonte separadamente, por exemplo [info1.txt][info2.pdf].
+        return """Você é um assistente inteligente ajudando os funcionários da Atra com perguntas sobre um conjunto de processos legais públicos.
+        Responda APENAS com os fatos listados na lista de fontes abaixo. Se não houver informações suficientes abaixo, diga que não sabe. Não gere respostas que não usem as fontes abaixo. Se fazer uma pergunta de esclarecimento para o usuário ajudaria, faça a pergunta.
+        Para informações tabulares, retorne-as como uma tabela HTML. Não retorne em formato markdown. Se a pergunta não estiver em português, responda no idioma usado na pergunta.
+        Cada fonte tem um nome seguido por dois pontos e a informação real, sempre inclua o nome da fonte para cada fato que você usar na resposta. Use colchetes para referenciar a fonte, por exemplo [info1.txt]. Não combine fontes, liste cada fonte separadamente, por exemplo [info1.txt][info2.pdf].
         {follow_up_questions_prompt}
         {injected_prompt}
         """
-
 
     @overload
     async def run_until_final_call(
@@ -97,8 +92,8 @@ class ChatReadRetrieveReadApproach(ChatApproach):
         has_vector = overrides.get("retrieval_mode") in ["vectors", "hybrid", None]
         use_semantic_captions = True if overrides.get("semantic_captions") and has_text else False
         top = overrides.get("top", 3)
-        minimum_search_score = overrides.get("minimum_search_score", 0.0)
-        minimum_reranker_score = overrides.get("minimum_reranker_score", 0.0)
+        minimum_search_score = overrides.get("minimum_search_score", 0.01)
+        minimum_reranker_score = overrides.get("minimum_reranker_score", 1.5)
 
         filter = self.build_filter(overrides, auth_claims)
         use_semantic_ranker = True if overrides.get("semantic_ranker") and has_text else False
@@ -117,7 +112,7 @@ class ChatReadRetrieveReadApproach(ChatApproach):
                         "properties": {
                             "search_query": {
                                 "type": "string",
-                                "description": "Query string to retrieve documents from azure search eg: 'Health care plan'",
+                                "description": "Query string to retrieve documents from azure search eg: 'Contract'",
                             }
                         },
                         "required": ["search_query"],
@@ -184,6 +179,8 @@ class ChatReadRetrieveReadApproach(ChatApproach):
 
         response_token_limit = 1024
         messages_token_limit = self.chatgpt_token_limit - response_token_limit
+       
+        
         messages = self.get_messages_from_history(
             system_prompt=system_message,
             model_id=self.chatgpt_model,
