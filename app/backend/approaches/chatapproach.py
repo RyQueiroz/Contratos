@@ -30,7 +30,7 @@ class ChatApproach(Approach, ABC):
         {"role": USER, "content": "Quais foram as provas apresentadas no caso trabalhista?"},
         {"role": ASSISTANT, "content": "Identifique as provas apresentadas no caso trabalhista"},
         {"role": USER, "content": "Qual foi o resultado da apelação no caso de locação de aluguel?"},
-        {"role": ASSISTANT, "content": "Informe o resultado da apelação no caso de locação de aluguel"}
+        {"role": ASSISTANT, "content": "Informe o resultado da apelação no caso de locação de aluguel"},
         {"role": USER, "content": "Qual é o procedimento para entrar com uma ação de despejo por falta de pagamento?"},
         {"role": ASSISTANT, "content": "Explique o procedimento para entrar com uma ação de despejo por falta de pagamento"},
         {"role": USER, "content": "Quais são os requisitos para caracterizar uma rescisão indireta do contrato de trabalho?"},
@@ -44,7 +44,7 @@ class ChatApproach(Approach, ABC):
         {"role": USER, "content": "Qual é a diferença entre um contrato de locação residencial e um contrato de locação comercial?"},
         {"role": ASSISTANT, "content": "Explique a diferença entre um contrato de locação residencial e um contrato de locação comercial"},
         {"role": USER, "content": "Quais são as formas de garantia de um contrato de locação?"},
-        {"role": ASSISTANT, "content": "Identifique as formas de garantia de um contrato de locação"}
+        {"role": ASSISTANT, "content": "Identifique as formas de garantia de um contrato de locação"},
     ]
     NO_RESPONSE = "0"
 
