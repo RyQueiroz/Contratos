@@ -11,31 +11,32 @@ from core.messagebuilder import MessageBuilder
 
 class RetrieveThenReadApproach(Approach):
     """
-    Simple retrieve-then-read implementation, using the AI Search and OpenAI APIs directly. It first retrieves
-    top documents from search, then constructs a prompt with them, and then uses OpenAI to generate an completion
-    (answer) with that prompt.
+    Implementação simples de recuperar e ler, usando as APIs do AI Search e OpenAI diretamente. Primeiro, ele recupera
+    os principais documentos da pesquisa, em seguida, constrói um prompt com eles e, em seguida, usa o OpenAI para gerar
+    uma conclusão (resposta) com esse prompt.
     """
 
     system_chat_template = (
-        "You are an intelligent assistant helping Contoso Inc employees with their healthcare plan questions and employee handbook questions. "
-        + "Use 'you' to refer to the individual asking the questions even if they ask with 'I'. "
-        + "Answer the following question using only the data provided in the sources below. "
-        + "For tabular information return it as an html table. Do not return markdown format. "
-        + "Each source has a name followed by colon and the actual information, always include the source name for each fact you use in the response. "
-        + "If you cannot answer using the sources below, say you don't know. Use below example to answer"
+        "Você é um assistente que fornece informações sobre ações trabalhistas e ações relacionadas à locação de imóveis."
+        + "Use 'você' para se referir ao indivíduo que faz as perguntas, mesmo que ele pergunte com 'eu'."
+        + "Responda à seguinte pergunta usando apenas os dados fornecidos nas fontes abaixo."
+        + "Para informações tabulares, retorne-as como uma tabela html. Não retorne no formato markdown."
+        + "Cada fonte tem um nome seguido por dois pontos e as informações reais, sempre inclua o nome da fonte para cada fato que você usar na resposta."
+        + "Se não puder responder usando as fontes abaixo, diga que não sabe. Use o exemplo abaixo para responder."
     )
 
     # shots/sample conversation
     question = """
-'What is the deductible for the employee plan for a visit to Overlake in Bellevue?'
+'Qual é o prazo para o pagamento das verbas rescisórias em um processo trabalhista no Brasil?'
 
-Sources:
-info1.txt: deductibles depend on whether you are in-network or out-of-network. In-network deductibles are $500 for employee and $1000 for family. Out-of-network deductibles are $1000 for employee and $2000 for family.
-info2.pdf: Overlake is in-network for the employee plan.
-info3.pdf: Overlake is the name of the area that includes a park and ride near Bellevue.
-info4.pdf: In-network institutions include Overlake, Swedish and others in the region
+Fontes:
+info1.txt: No Brasil, o prazo para o pagamento das verbas rescisórias em um processo trabalhista é de até 10 dias após o término do contrato de trabalho.
+info2.pdf: A Consolidação das Leis do Trabalho (CLT) estabelece os direitos e deveres dos empregadores e empregados no Brasil.
+info3.pdf: O prazo para pagamento das verbas rescisórias pode variar de acordo com a categoria profissional e a convenção coletiva de trabalho.
+info4.pdf: Os empregadores devem cumprir rigorosamente os prazos estabelecidos pela legislação trabalhista brasileira para evitar penalidades.
 """
-    answer = "In-network deductibles are $500 for employee and $1000 for family [info1.txt] and Overlake is in-network for the employee plan [info2.pdf][info4.pdf]."
+    answer = "No Brasil, o prazo para o pagamento das verbas rescisórias em um processo trabalhista é de até 10 dias após o término do contrato de trabalho, conforme estabelecido pela legislação trabalhista, incluindo a Consolidação das Leis do Trabalho (CLT) [info1.txt][info2.pdf][info3.pdf][info4.pdf]."
+
 
     def __init__(
         self,
@@ -126,7 +127,7 @@ info4.pdf: In-network institutions include Overlake, Swedish and others in the r
                 # Azure OpenAI takes the deployment name as the model name
                 model=self.chatgpt_deployment if self.chatgpt_deployment else self.chatgpt_model,
                 messages=updated_messages,
-                temperature=overrides.get("temperature", 0.3),
+                temperature=overrides.get("temperature", 0.0),
                 max_tokens=1024,
                 n=1,
             )

@@ -63,19 +63,19 @@ class ChatReadRetrieveReadVisionApproach(ChatApproach):
     @property
     def system_message_chat_conversation(self):
         return """
-        You are an intelligent assistant helping analyze the Annual Financial Report of Contoso Ltd., The documents contain text, graphs, tables and images.
-        Each image source has the file name in the top left corner of the image with coordinates (10,10) pixels and is in the format SourceFileName:<file_name>
-        Each text source starts in a new line and has the file name followed by colon and the actual information
-        Always include the source name from the image or text for each fact you use in the response in the format: [filename]
-        Answer the following question using only the data provided in the sources below.
-        If asking a clarifying question to the user would help, ask the question.
-        Be brief in your answers.
-        For tabular information return it as an html table. Do not return markdown format.
-        The text and image source can be the same file name, don't use the image title when citing the image source, only use the file name as mentioned
-        If you cannot answer using the sources below, say you don't know. Return just the answer without any input texts.
+        O Assistente fornece informações sobre ações trabalhistas e ações relacionadas à locação de imóveis.
+        Os documentos contêm texto, gráficos, tabelas e imagens.
+        Sempre inclua o nome da fonte da imagem ou do texto para cada fato usado na resposta no formato: [nome_do_arquivo].
+        Responda à seguinte pergunta usando apenas os dados fornecidos nas fontes abaixo.
+        Se fazer uma pergunta de esclarecimento para o usuário ajudar, faça a pergunta.
+        Seja breve em suas respostas.
+        Para informações tabulares, retorne-as como uma tabela html. Não retorne no formato markdown.
+        A fonte de texto e imagem pode ser o mesmo nome de arquivo, não use o título da imagem ao citar a fonte da imagem, use apenas o nome do arquivo conforme mencionado.
+        Se não puder responder usando as fontes abaixo, diga que não sabe. Retorne apenas a resposta sem nenhum texto de entrada.
         {follow_up_questions_prompt}
         {injected_prompt}
         """
+
 
     async def run_until_final_call(
         self,
@@ -229,7 +229,7 @@ class ChatReadRetrieveReadVisionApproach(ChatApproach):
         chat_coroutine = self.openai_client.chat.completions.create(
             model=self.gpt4v_deployment if self.gpt4v_deployment else self.gpt4v_model,
             messages=messages,
-            temperature=overrides.get("temperature", 0.3),
+            temperature=overrides.get("temperature", 0.0),
             max_tokens=response_token_limit,
             n=1,
             stream=should_stream,

@@ -21,30 +21,49 @@ class ChatApproach(Approach, ABC):
     ASSISTANT = "assistant"
 
     query_prompt_few_shots = [
-        {"role": USER, "content": "How did crypto do last year?"},
-        {"role": ASSISTANT, "content": "Summarize Cryptocurrency Market Dynamics from last year"},
-        {"role": USER, "content": "What are my health plans?"},
-        {"role": ASSISTANT, "content": "Show available health plans"},
+        {"role": USER, "content": "Qual foi o motivo da apelação no caso de locação de aluguel?"},
+        {"role": ASSISTANT, "content": "Identifique o motivo da apelação no caso de locação de aluguel"},
+        {"role": USER, "content": "Quais foram os argumentos apresentados pelo apelante no caso trabalhista?"},
+        {"role": ASSISTANT, "content": "Liste os argumentos apresentados pelo apelante no caso trabalhista"},
+        {"role": USER, "content": "Qual foi a decisão do juiz em primeira instância no caso de locação de aluguel?"},
+        {"role": ASSISTANT, "content": "Descreva a decisão do juiz em primeira instância no caso de locação de aluguel"},
+        {"role": USER, "content": "Quais foram as provas apresentadas no caso trabalhista?"},
+        {"role": ASSISTANT, "content": "Identifique as provas apresentadas no caso trabalhista"},
+        {"role": USER, "content": "Qual foi o resultado da apelação no caso de locação de aluguel?"},
+        {"role": ASSISTANT, "content": "Informe o resultado da apelação no caso de locação de aluguel"},
+        {"role": USER, "content": "Qual é o procedimento para entrar com uma ação de despejo por falta de pagamento?"},
+        {"role": ASSISTANT, "content": "Explique o procedimento para entrar com uma ação de despejo por falta de pagamento"},
+        {"role": USER, "content": "Quais são os requisitos para caracterizar uma rescisão indireta do contrato de trabalho?"},
+        {"role": ASSISTANT, "content": "Descreva os requisitos para caracterizar uma rescisão indireta do contrato de trabalho"},
+        {"role": USER, "content": "Quais são os prazos para interpor recurso após uma sentença judicial?"},
+        {"role": ASSISTANT, "content": "Informe os prazos para interpor recurso após uma sentença judicial"},
+        {"role": USER, "content": "Como é calculada a indenização por danos morais em um processo trabalhista?"},
+        {"role": ASSISTANT, "content": "Explique como é calculada a indenização por danos morais em um processo trabalhista"},
+        {"role": USER, "content": "Quais são os documentos necessários para instruir uma ação de cobrança de aluguel em atraso?"},
+        {"role": ASSISTANT, "content": "Liste os documentos necessários para instruir uma ação de cobrança de aluguel em atraso"},
+        {"role": USER, "content": "Qual é a diferença entre um contrato de locação residencial e um contrato de locação comercial?"},
+        {"role": ASSISTANT, "content": "Explique a diferença entre um contrato de locação residencial e um contrato de locação comercial"},
+        {"role": USER, "content": "Quais são as formas de garantia de um contrato de locação?"},
+        {"role": ASSISTANT, "content": "Identifique as formas de garantia de um contrato de locação"},
     ]
     NO_RESPONSE = "0"
 
-    follow_up_questions_prompt_content = """Generate 3 very brief follow-up questions that the user would likely ask next.
-    Enclose the follow-up questions in double angle brackets. Example:
-    <<Are there exclusions for prescriptions?>>
-    <<Which pharmacies can be ordered from?>>
-    <<What is the limit for over-the-counter medication?>>
-    Do no repeat questions that have already been asked.
-    Make sure the last question ends with ">>".
+    follow_up_questions_prompt_content = """Gere 3 perguntas de acompanhamento muito breves que o usuário provavelmente faria em seguida.
+    Inclua as perguntas de acompanhamento entre duplos sinais de ângulo. Exemplo:
+    <<Quais são os principais pontos de disputa na locação do imóvel?>>
+    <<Existem provas apresentadas que poderiam influenciar a decisão do tribunal no caso trabalhista?>>
+    <<Existem decisões judiciais anteriores semelhantes que podem influenciar o resultado deste caso?>>
+    Certifique-se de que a última pergunta termine com ">>".
     """
 
-    query_prompt_template = """Below is a history of the conversation so far, and a new question asked by the user that needs to be answered by searching in a knowledge base.
-    You have access to Azure AI Search index with 100's of documents.
-    Generate a search query based on the conversation and the new question.
-    Do not include cited source filenames and document names e.g info.txt or doc.pdf in the search query terms.
-    Do not include any text inside [] or <<>> in the search query terms.
-    Do not include any special characters like '+'.
-    If the question is not in English, translate the question to English before generating the search query.
-    If you cannot generate a search query, return just the number 0.
+    query_prompt_template = """Abaixo está o histórico da conversa até agora e uma nova pergunta feita pelo usuário que precisa ser respondida pesquisando em uma base de conhecimento.
+    Você tem acesso ao índice de pesquisa do Azure AI com vários documentos. Os documentos são processos legais públicos relacionados a uma variedade de serviços e acordos.
+    Gere uma consulta de pesquisa com base na conversa e na nova pergunta.
+    Não inclua nomes de arquivos de origem citados e nomes de documentos, por exemplo, info.txt ou doc.pdf, nos termos da consulta de pesquisa.
+    Não inclua nenhum texto dentro de [] ou <<>> nos termos da consulta de pesquisa.
+    Não inclua nenhum caractere especial como '+'.
+    Se a pergunta não estiver em português, traduza a pergunta para o português antes de gerar a consulta de pesquisa.
+    Se você não puder gerar uma consulta de pesquisa, retorne apenas o número 0.
     """
 
     @property
