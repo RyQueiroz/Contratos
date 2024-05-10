@@ -57,7 +57,7 @@ class ChatApproach(Approach, ABC):
     """
 
     query_prompt_template = """Abaixo está o histórico da conversa até agora e uma nova pergunta feita pelo usuário que precisa ser respondida pesquisando em uma base de conhecimento.
-    Você tem acesso ao índice de pesquisa do Azure AI com vários documentos. Os documentos são documentos legais públicos relacionados a uma variedade de serviços e acordos.
+    Você tem acesso ao índice de pesquisa do Azure AI com vários documentos. Os documentos são processos legais públicos relacionados a uma variedade de serviços e acordos.
     Gere uma consulta de pesquisa com base na conversa e na nova pergunta.
     Não inclua nomes de arquivos de origem citados e nomes de documentos, por exemplo, info.txt ou doc.pdf, nos termos da consulta de pesquisa.
     Não inclua nenhum texto dentro de [] ou <<>> nos termos da consulta de pesquisa.
