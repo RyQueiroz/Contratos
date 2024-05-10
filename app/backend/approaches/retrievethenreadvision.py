@@ -145,7 +145,7 @@ class RetrieveThenReadVisionApproach(Approach):
             await self.openai_client.chat.completions.create(
                 model=self.gpt4v_deployment if self.gpt4v_deployment else self.gpt4v_model,
                 messages=updated_messages,
-                temperature=overrides.get("temperature", 0.0),
+                temperature=overrides.get("temperature", 0.3),
                 max_tokens=1024,
                 n=1,
             )
